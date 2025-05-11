@@ -56,7 +56,7 @@ public class CHARMAEL extends Fighter {
      */
     public void specialAbility(Fighter ally1, Fighter ally2, Fighter ally3) {
         if (this.energy == this.maxEnergy) {
-            // shields
+            // Shields
             giveShield(ally1, this.specialAbilityStats[specialAbilityLevel] * this.combatDefense, 2);
             giveShield(ally2, this.specialAbilityStats[specialAbilityLevel] * this.combatDefense, 2);
             giveShield(ally3, this.specialAbilityStats[specialAbilityLevel] * this.combatDefense, 2);
