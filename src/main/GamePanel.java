@@ -1,5 +1,6 @@
 package main;
 
+import data.SaveLoad;
 import main.combat.characters.CHARMAEL;
 import main.tile.*;
 import main.entities.*;
@@ -33,14 +34,19 @@ public class GamePanel extends JPanel implements Runnable {
     public CheckCollision cChecker = new CheckCollision(this);
     KeyHandler keyH = new KeyHandler();
     public Ui ui = new Ui(this);
+    SaveLoad saveLoad = new SaveLoad(this);
     Thread gameThread;
 
     // ENTITIES && OBJECTS //
     public Player player = new Player(this, keyH);
 
+    // PLAYER //
+    public int playerLevel = 1;
+    public int worldLevel, worldExp;
+
     // CHARACTERS //
     // new double[0.5, 0.5036, 0.5085, 0.5151, 0.5241, 0.5364, 0.553, 0.5757, 0.6064, 0.6483, 0.7051]
-    CHARMAEL charMael = new CHARMAEL(130, 38, 102, 80,
+    public CHARMAEL charMael = new CHARMAEL(130, 38, 102, 80,
             0.05, 0.5,
             1,
             0, 0,
@@ -48,6 +54,7 @@ public class GamePanel extends JPanel implements Runnable {
             0, 0,
             0,
             140, 7, 20);
+    public boolean hasCharMael = true;
 
     public GamePanel() {
 
@@ -71,6 +78,9 @@ public class GamePanel extends JPanel implements Runnable {
 
         gameThread = new Thread(this);
         gameThread.start();
+
+        saveLoad.saveProfileData();
+        saveLoad.saveObtainedCharactersData();
 
     }
 
