@@ -58,7 +58,7 @@ public class SaveLoad {
             // SAVE DATA //
             ocds.mael = gp.hasCharMael;
 
-            // Write the ProfilesDataStorage object
+            // Write the SaveLoad object
             oos.writeObject(ocds);
             System.out.println("File saved");
 

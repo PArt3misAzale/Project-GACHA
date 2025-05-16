@@ -8,4 +8,6 @@ public class ProfilesDataStorage implements Serializable {
     int worldLevel;
     int worldExp;
 
+    int nbConnections;
+
 }

@@ -79,8 +79,8 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread = new Thread(this);
         gameThread.start();
 
-        saveLoad.saveProfileData();
-        saveLoad.saveObtainedCharactersData();
+        saveLoad.saveProfileData(); // save profile data
+        saveLoad.saveObtainedCharactersData(); // save obtained characters data
 
     }
 
