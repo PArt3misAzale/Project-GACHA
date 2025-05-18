@@ -1,14 +1,16 @@
 package main.combat;
 
+import main.GamePanel;
+import main.Item;
 import main.artifacts.Artifact;
 
-public class Fighter {
+public class Fighter extends Item {
 
     // STATS //
     public double baseHealth, baseAttack, baseDefense, baseSpeed,
             baseCritRate, baseCritDamage,
             baseEnergyRecharge,
-            baseElementalMastery, baseElementalBonus,
+            baseElementalBonus,
             baseEffectResistance, baseEffectBonus,
             baseWeaknessResistance, baseWeaknessBonus,
             baseHealBonus;
@@ -16,7 +18,7 @@ public class Fighter {
     public double health, attack, defense, speed,
             critRate, critDamage,
             energyRecharge,
-            elementalMastery, elementalBonus,
+            elementalBonus,
             effectResistance, effectBonus,
             weaknessResistance, weaknessBonus,
             healBonus;
@@ -24,7 +26,7 @@ public class Fighter {
     public double combatHealth, combatAttack, combatDefense, combatSpeed,
             combatCritRate, combatCritDamage,
             combatEnergyRecharge,
-            combatElementalMastery, combatElementalBonus,
+            combatElementalBonus,
             combatEffectResistance, combatEffectBonus,
             combatWeaknessResistance, combatWeaknessBonus,
             combatHealBonus;
@@ -42,22 +44,28 @@ public class Fighter {
 
     // COMBAT //
     public int energy, maxEnergy, normalAttackEnergy, skillEnergy;
-    public double[] effects = new double[100]; public String[] effectsType = new String[100]; public int[] effectsDuration = new int[100]; public int nbEffects;
+    public Fighter[] allies = new Fighter[3];
+
+    // EFFECTS //
+    public Effect[][] allyEffects;
 
     // FIGHTER DEF //
     public Fighter(double baseHealth, double baseAttack, double baseDefense, double baseSpeed,
                    double baseCritRate, double baseCritDamage,
                    double baseEnergyRecharge,
-                   double baseElementalMastery, double baseElementalBonus,
+                   double baseElementalBonus,
                    double baseEffectResistance, double baseEffectBonus,
                    double baseWeaknessResistance, double baseWeaknessBonus,
                    double baseHealBonus,
-                   int maxEnergy, int normalAttackEnergy, int skillEnergy) {
+                   int maxEnergy, int normalAttackEnergy, int skillEnergy,
+                   GamePanel gp, String name) {
+
+        super(name);
 
         this.baseHealth = baseHealth; this.baseAttack = baseAttack; this.baseDefense = baseDefense; this.baseSpeed = baseSpeed;
         this.baseCritRate = baseCritRate; this.baseCritDamage = baseCritDamage;
         this.baseEnergyRecharge = baseEnergyRecharge;
-        this.baseElementalMastery = baseElementalMastery; this.baseElementalBonus = baseElementalBonus;
+        this.baseElementalBonus = baseElementalBonus;
         this.baseEffectResistance = baseEffectResistance; this.baseEffectBonus = baseEffectBonus;
         this.baseWeaknessResistance = baseWeaknessResistance; this.baseWeaknessBonus = baseWeaknessBonus;
         this.baseHealBonus = baseHealBonus;
@@ -65,7 +73,7 @@ public class Fighter {
         this.health = this.baseHealth; this.attack = this.baseAttack; this.defense = baseDefense; this.speed = baseSpeed;
         this.critRate = baseCritRate; this.critDamage = baseCritDamage;
         this.energyRecharge = baseEnergyRecharge;
-        this.elementalMastery = this.baseElementalMastery; this.elementalBonus = this.baseElementalBonus;
+        this.elementalBonus = this.baseElementalBonus;
         this.effectResistance = baseEffectResistance; this.effectBonus = baseEffectBonus;
         this.weaknessResistance = baseWeaknessResistance; this.weaknessBonus = baseWeaknessBonus;
         this.healBonus = baseHealBonus;
@@ -73,6 +81,14 @@ public class Fighter {
         this.normalAttackLevel = 0; this.skillLevel = 0; this.specialAbilityLevel = 0;
 
         this.maxEnergy = maxEnergy; this.normalAttackEnergy = normalAttackEnergy; this.skillEnergy = skillEnergy;
+
+        this.allyEffects = new Effect[4][gp.maxEffects];
+
+        for (int i = 0; i < gp.maxEffects; i++) {
+            for (int j = 0; j < 3; j++) {
+                allyEffects[j][i].setType(i);
+            }
+        }
     }
 
     // Artifacts //
@@ -205,8 +221,6 @@ public class Fighter {
                 this.critDamage += this.crystal.getSubStats()[i];
             } else if (this.crystal.getSubStatsType()[i] == "ER") {
                 this.energyRecharge += this.crystal.getSubStats()[i];
-            } else if (this.crystal.getSubStatsType()[i] == "EM") {
-                this.elementalMastery += this.crystal.getSubStats()[i];
             } else if (this.crystal.getSubStatsType()[i] == "EB") {
                 this.elementalBonus += this.crystal.getSubStats()[i];
             } else if (this.crystal.getSubStatsType()[i] == "EFR") {
@@ -258,8 +272,6 @@ public class Fighter {
                 this.critDamage += this.rune.getSubStats()[i];
             } else if (this.rune.getSubStatsType()[i] == "ER") {
                 this.energyRecharge += this.rune.getSubStats()[i];
-            } else if (this.rune.getSubStatsType()[i] == "EM") {
-                this.elementalMastery += this.rune.getSubStats()[i];
             } else if (this.rune.getSubStatsType()[i] == "EB") {
                 this.elementalBonus += this.rune.getSubStats()[i];
             } else if (this.rune.getSubStatsType()[i] == "EFR") {
@@ -313,8 +325,6 @@ public class Fighter {
                 this.critDamage += this.totem.getSubStats()[i];
             } else if (this.totem.getSubStatsType()[i] == "ER") {
                 this.energyRecharge += this.totem.getSubStats()[i];
-            } else if (this.totem.getSubStatsType()[i] == "EM") {
-                this.elementalMastery += this.totem.getSubStats()[i];
             } else if (this.totem.getSubStatsType()[i] == "EB") {
                 this.elementalBonus += this.totem.getSubStats()[i];
             } else if (this.totem.getSubStatsType()[i] == "EFR") {
@@ -366,8 +376,6 @@ public class Fighter {
                 this.critDamage += this.medallion.getSubStats()[i];
             } else if (this.medallion.getSubStatsType()[i] == "ER") {
                 this.energyRecharge += this.medallion.getSubStats()[i];
-            } else if (this.medallion.getSubStatsType()[i] == "EM") {
-                this.elementalMastery += this.medallion.getSubStats()[i];
             } else if (this.medallion.getSubStatsType()[i] == "EB") {
                 this.elementalBonus += this.medallion.getSubStats()[i];
             } else if (this.medallion.getSubStatsType()[i] == "EFR") {
@@ -417,8 +425,6 @@ public class Fighter {
                 this.critDamage += this.codex.getSubStats()[i];
             } else if (this.codex.getSubStatsType()[i] == "ER") {
                 this.energyRecharge += this.codex.getSubStats()[i];
-            } else if (this.codex.getSubStatsType()[i] == "EM") {
-                this.elementalMastery += this.codex.getSubStats()[i];
             } else if (this.codex.getSubStatsType()[i] == "EB") {
                 this.elementalBonus += this.codex.getSubStats()[i];
             } else if (this.codex.getSubStatsType()[i] == "EFR") {
@@ -439,9 +445,9 @@ public class Fighter {
      * Update the stats with {@code this}'s Tiara's stats
      */
     public void artifactTiaraUpdate() {
-        // Main stats : Elemental mastery or Heal bonus
-        if (this.tiara.getMainStatType() == "EM") {
-            this.elementalMastery += this.tiara.mainStat;
+        // Main stats : Elemental bonus or Heal bonus
+        if (this.tiara.getMainStatType() == "EB") {
+            this.elementalBonus += this.tiara.mainStat;
         } else if (this.tiara.getMainStatType() == "HB") {
             this.healBonus += this.tiara.mainStat;
         }
@@ -468,8 +474,6 @@ public class Fighter {
                 this.critDamage += this.tiara.getSubStats()[i];
             } else if (this.tiara.getSubStatsType()[i] == "ER") {
                 this.energyRecharge += this.tiara.getSubStats()[i];
-            } else if (this.tiara.getSubStatsType()[i] == "EM") {
-                this.elementalMastery += this.tiara.getSubStats()[i];
             } else if (this.tiara.getSubStatsType()[i] == "EB") {
                 this.elementalBonus += this.tiara.getSubStats()[i];
             } else if (this.tiara.getSubStatsType()[i] == "EFR") {
@@ -491,18 +495,20 @@ public class Fighter {
     /**
      * Set up the combat : reset stats
      */
-    public void setUpCombat() {
-        this.combatHealth = this.health; this.combatAttack = this.attack; this.combatDefense = defense; this.combatSpeed = speed;
+    public void setUpCombat(Fighter ally1, Fighter ally2, Fighter ally3) {
+        // this.combatHealth = this.health;
+        this.combatAttack = this.attack; this.combatDefense = defense; this.combatSpeed = speed;
         this.combatCritRate = critRate; this.combatCritDamage = critDamage;
         this.combatEnergyRecharge = energyRecharge;
-        this.combatElementalMastery = this.elementalMastery; this.combatElementalBonus = this.elementalBonus;
+        this.combatElementalBonus = this.elementalBonus;
         this.combatEffectResistance = effectResistance; this.combatEffectBonus = effectBonus;
         this.combatWeaknessResistance = weaknessResistance; this.combatWeaknessBonus = weaknessBonus;
         this.combatHealBonus = healBonus;
 
         this.energy = 0;
-        this.nbEffects = 0;
         this.activePassive = false;
+
+        this.allies[0] = ally1; this.allies[1] = ally2; this.allies[2] = ally3;
     }
 
     /**
@@ -519,42 +525,34 @@ public class Fighter {
 
     /**
      * Types of effects : shield, heal, damage reduction, provocation
+     * @param ally
      * @param amount
      * @param type
      * @param duration
      */
-    public void createEffect(double amount, String type, int duration) {
-        this.effects[nbEffects] = amount; this.effectsType[nbEffects] = type; this.effectsDuration[nbEffects] = duration;
-        this.nbEffects += 1;
+    public void receiveEffect(Fighter ally, double amount, int type, int duration) {
+        int c = 3;
+        if (ally == allies[0]) { // ally 0
+           c = 0;
+        } else if (ally == allies[1]) { // ally 1
+            c = 1;
+        } else if (ally == allies[2]) { // ally 2
+            c = 2;
+        }
+
+        allyEffects[c][type].setIsActive(true);
+        allyEffects[c][type].setDuration(duration);
+        allyEffects[c][type].setAmount(amount);
     }
 
-    /**
-     * Do a normal attack to a target
-     * @param enemy
-     */
-    public void normalAttack(Fighter enemy){
-        enemy.looseHealth(this.normalAttackStats[normalAttackLevel] * this.combatAttack);
-        gainEnergy(normalAttackEnergy); // return 7 points of energy
+    public int findAllyPointer(Fighter ally) {
+        if (ally == this.allies[0]) { return 0; }
+        else if (ally == this.allies[1]) { return 1; }
+        else { return 2; }
     }
 
-    /**
-     * Give a shield to the target
-     * @param ally
-     * @param amount
-     * @param duration
-     */
-    public void giveShield(Fighter ally, double amount, int duration) {
-        ally.createEffect(amount, "shield", duration);
-    }
-
-    /**
-     * Heal the target
-     * @param ally
-     * @param amount
-     * @param duration
-     */
-    public void giveHeal(Fighter ally, double amount, int duration) {
-        ally.createEffect(amount, "heal", duration);
+    public Fighter findPointerAlly(int pointer) {
+        return this.allies[pointer];
     }
 
     /**

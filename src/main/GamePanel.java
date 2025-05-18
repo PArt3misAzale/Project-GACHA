@@ -1,7 +1,8 @@
 package main;
 
 import data.SaveLoad;
-import main.combat.characters.CHARMAEL;
+import main.combat.characters.CHAR_MAEL;
+import main.combat.weapons.WEAP_GRANITCOLUMN;
 import main.tile.*;
 import main.entities.*;
 
@@ -37,6 +38,10 @@ public class GamePanel extends JPanel implements Runnable {
     SaveLoad saveLoad = new SaveLoad(this);
     Thread gameThread;
 
+    // GACHA SYSTEM //
+    public int maxFiveTempoChars = 1;
+    public int maxFourTempoChars = 0;
+
     // ENTITIES && OBJECTS //
     public Player player = new Player(this, keyH);
 
@@ -44,17 +49,23 @@ public class GamePanel extends JPanel implements Runnable {
     public int playerLevel = 1;
     public int worldLevel, worldExp;
 
+    // COMBAT //
+    public int maxEffects = 4;
+
     // CHARACTERS //
-    // new double[0.5, 0.5036, 0.5085, 0.5151, 0.5241, 0.5364, 0.553, 0.5757, 0.6064, 0.6483, 0.7051]
-    public CHARMAEL charMael = new CHARMAEL(130, 38, 102, 80,
+    public CHAR_MAEL charMael = new CHAR_MAEL(130, 38, 102, 80,
             0.05, 0.5,
             1,
             0, 0,
             0, 0,
             0, 0,
-            0,
-            140, 7, 20);
+            140, 7, 20,
+            this);
     public boolean hasCharMael = true;
+
+    // WEAPONS //
+    public WEAP_GRANITCOLUMN weapGranitColumn = new WEAP_GRANITCOLUMN("Granit column", 860, "DEF%", this);
+    public boolean hasWeaponGranitColumn = true;
 
     public GamePanel() {
 
