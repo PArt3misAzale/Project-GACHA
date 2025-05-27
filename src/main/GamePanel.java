@@ -5,6 +5,7 @@ import main.combat.characters.CHAR_MAEL;
 import main.combat.weapons.WEAP_GRANITCOLUMN;
 import main.tile.*;
 import main.entities.*;
+import java.time.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,6 +38,13 @@ public class GamePanel extends JPanel implements Runnable {
     public Ui ui = new Ui(this);
     SaveLoad saveLoad = new SaveLoad(this);
     Thread gameThread;
+
+    // TIME //
+    public LocalDate date = LocalDate.now();
+    public int year = date.getYear();
+    public int month = date.getMonthValue();
+    public int day = date.getDayOfMonth();
+    public int dayOfYear = date.getDayOfYear();
 
     // GACHA SYSTEM //
     public int maxFiveTempoChars = 1;
@@ -179,6 +187,11 @@ public class GamePanel extends JPanel implements Runnable {
         se.setFile(i);
         se.play();
 
+    }
+
+    // TIME //
+    public void updateDate() {
+        this.date = LocalDate.now(); this.year = date.getYear(); this.month = date.getMonthValue(); this.day = date.getDayOfMonth(); this.dayOfYear = date.getDayOfYear();
     }
 
 }

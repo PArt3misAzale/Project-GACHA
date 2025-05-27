@@ -15,7 +15,7 @@ public class SaveLoad {
     // PROFILE DATA //
     public void saveProfileData() {
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("res/data/profiles/profile1.save"))); // rajouter le player profile en '+ playerProfile +' ?
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("res/profile1.save"))); // rajouter le player profile en '+ playerProfile +' ?
 
             ProfilesDataStorage pds = new ProfilesDataStorage();
 
@@ -33,7 +33,7 @@ public class SaveLoad {
 
     public void loadProfileData() {
         try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("res/data/profiles/profile1.save"))); // rajouter le player profile en '+ playerProfile +' ?
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("res/profile1.save"))); // rajouter le player profile en '+ playerProfile +' ?
 
             // Read the ProfilesDataStorage object
             ProfilesDataStorage pds = (ProfilesDataStorage)ois.readObject();
@@ -51,7 +51,7 @@ public class SaveLoad {
     public void saveObtainedCharactersData() {
         try {
             System.out.println("Save started");
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("res/data/obtained_characters/profile1.save"))); // rajouter le player profile en '+ playerProfile +' ?
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("res/profile1_obtained_characters.save"))); // rajouter le player profile en '+ playerProfile +' ?
 
             ObtainedCharactersDataStorage ocds = new ObtainedCharactersDataStorage();
 
@@ -69,7 +69,7 @@ public class SaveLoad {
 
     public void loadObtainedCharactersData() {
         try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("res/data/obtained_characters/profile1.save"))); // rajouter le player profile en '+ playerProfile +' ?
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("res/profile1_obtained_characters.save"))); // rajouter le player profile en '+ playerProfile +' ?
 
             // Read the ProfilesDataStorage object
             ObtainedCharactersDataStorage ocds = (ObtainedCharactersDataStorage)ois.readObject();
