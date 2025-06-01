@@ -86,6 +86,7 @@ public class Fighter extends Item {
 
         for (int i = 0; i < gp.maxEffects; i++) {
             for (int j = 0; j < 3; j++) {
+                allyEffects[j][i] = new Effect();
                 allyEffects[j][i].setType(i);
             }
         }
@@ -192,7 +193,7 @@ public class Fighter extends Item {
      * Update the stats with {@code this}'s Crystal's stats
      */
     public void artifactCrystalUpdate() {
-        // Main stats : HP% or HP
+        // Window stats : HP% or HP
         if (this.crystal.getMainStatType() == "HP%") {
             this.health += baseHealth * this.crystal.mainStat;
         } else if (this.crystal.getMainStatType() == "HP") {
@@ -241,7 +242,7 @@ public class Fighter extends Item {
      * Update the stats with {@code this}'s Rune's stats
      */
     public void artifactRuneUpdate() {
-        // Main stats : ATK% or ATK or Elemental bonus
+        // Window stats : ATK% or ATK or Elemental bonus
         if (this.rune.getMainStatType() == "ATK%") {
             this.attack += baseAttack * this.rune.mainStat;
         } else if (this.rune.getMainStatType() == "ATK") {
@@ -292,7 +293,7 @@ public class Fighter extends Item {
      * Update the stats with {@code this}'s Totem's stats
      */
     public void artifactTotemUpdate() {
-        // Main stats : DEF% or DEF or Effects resistance or Weakness resistance
+        // Window stats : DEF% or DEF or Effects resistance or Weakness resistance
         if (this.totem.getMainStatType() == "DEF%") {
             this.defense += baseDefense * this.totem.mainStat;
         } else if (this.totem.getMainStatType() == "DEF") {
@@ -345,7 +346,7 @@ public class Fighter extends Item {
      * Update the stats with {@code this}'s Medallion's stats
      */
     public void artifactMedallion() {
-        // Main stats : Energy recharge or Effects bonus or Weakness bonus
+        // Window stats : Energy recharge or Effects bonus or Weakness bonus
         if (this.medallion.getMainStatType() == "ER") {
             this.energyRecharge += this.medallion.mainStat;
         } else if (this.medallion.getMainStatType() == "EFB") {
@@ -396,7 +397,7 @@ public class Fighter extends Item {
      * Update the stats with {@code this}'s Codex's stats
      */
     public void artifactCodexUpdate() {
-        // Main stats : Crit Rate or Crit damage
+        // Window stats : Crit Rate or Crit damage
         if (this.codex.getMainStatType() == "CR") {
             this.critRate += this.codex.mainStat;
         } else if (this.codex.getMainStatType() == "CD") {
@@ -445,7 +446,7 @@ public class Fighter extends Item {
      * Update the stats with {@code this}'s Tiara's stats
      */
     public void artifactTiaraUpdate() {
-        // Main stats : Elemental bonus or Heal bonus
+        // Window stats : Elemental bonus or Heal bonus
         if (this.tiara.getMainStatType() == "EB") {
             this.elementalBonus += this.tiara.mainStat;
         } else if (this.tiara.getMainStatType() == "HB") {

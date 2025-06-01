@@ -12,18 +12,17 @@ public class SaveLoad {
         this.gp = gp;
     }
 
-    // PROFILE DATA //
-    public void saveProfileData() {
+    // PROFILES //
+    public void saveProfilesData() {
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("res/profile1.save"))); // rajouter le player profile en '+ playerProfile +' ?
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("res/profiles.save")));
 
             ProfilesDataStorage pds = new ProfilesDataStorage();
 
             // SAVE DATA //
-            pds.playerLevel = gp.playerLevel;
-            pds.worldLevel = gp.worldLevel; pds.worldExp = gp.worldExp;
+            pds.profilesNames = gp.profilesNames;
 
-            // Write the ProfilesDataStorage object
+            // Write the ProfileDataStorage object
             oos.writeObject(pds);
 
         } catch (IOException e) {
@@ -31,16 +30,56 @@ public class SaveLoad {
         }
     }
 
-    public void loadProfileData() {
+    public void loadProfilesData() {
         try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("res/profile1.save"))); // rajouter le player profile en '+ playerProfile +' ?
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("res/profiles.save")));
 
-            // Read the ProfilesDataStorage object
+            // Read the ProfileDataStorage object
             ProfilesDataStorage pds = (ProfilesDataStorage)ois.readObject();
+
+            // LOAD DATA //
+            gp.profilesNames = pds.profilesNames;
+
+        } catch (Exception e) {
+            System.out.println("Load Exception");
+        }
+    }
+
+    // PROFILE DATA //
+    public void saveProfileData(String profileName) {
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("res/" + profileName + ".save")));
+
+            ProfileDataStorage pds = new ProfileDataStorage();
+
+            // SAVE DATA //
+            pds.playerLevel = gp.playerLevel;
+            pds.worldLevel = gp.worldLevel; pds.worldExp = gp.worldExp;
+            pds.worldLevelMaxExp = gp.worldLevelMaxExp;
+            pds.levelExpPercentage = gp.levelExpPercentage;
+            pds.birthdayDate = gp.birthdayDate;
+
+            // Write the ProfileDataStorage object
+            oos.writeObject(pds);
+
+        } catch (IOException e) {
+            System.out.println("Save Exception");
+        }
+    }
+
+    public void loadProfileData(String profileName) {
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("res/" + profileName + ".save")));
+
+            // Read the ProfileDataStorage object
+            ProfileDataStorage pds = (ProfileDataStorage)ois.readObject();
 
             // LOAD DATA //
             gp.playerLevel = pds.playerLevel;
             gp.worldLevel = pds.worldLevel; gp.worldExp = pds.worldExp;
+            gp.worldLevelMaxExp = pds.worldLevelMaxExp;
+            gp.levelExpPercentage = pds.levelExpPercentage;
+            gp.birthdayDate = pds.birthdayDate;
 
         } catch (Exception e) {
             System.out.println("Load Exception");
@@ -48,10 +87,9 @@ public class SaveLoad {
     }
 
     // OBTAINED CHARACTERS DATA  //
-    public void saveObtainedCharactersData() {
+    public void saveObtainedCharactersData(String profileName) {
         try {
-            System.out.println("Save started");
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("res/profile1_obtained_characters.save"))); // rajouter le player profile en '+ playerProfile +' ?
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("res/" + profileName + "_obtained_characters.save")));
 
             ObtainedCharactersDataStorage ocds = new ObtainedCharactersDataStorage();
 
@@ -67,11 +105,11 @@ public class SaveLoad {
         }
     }
 
-    public void loadObtainedCharactersData() {
+    public void loadObtainedCharactersData(String profileName) {
         try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("res/profile1_obtained_characters.save"))); // rajouter le player profile en '+ playerProfile +' ?
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("res/" + profileName + "_obtained_characters.save"))); // rajouter le player profile en '+ playerProfile +' ?
 
-            // Read the ProfilesDataStorage object
+            // Read the ProfileDataStorage object
             ObtainedCharactersDataStorage ocds = (ObtainedCharactersDataStorage)ois.readObject();
 
             // LOAD DATA //

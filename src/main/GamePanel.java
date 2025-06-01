@@ -5,10 +5,13 @@ import main.combat.characters.CHAR_MAEL;
 import main.combat.weapons.WEAP_GRANITCOLUMN;
 import main.tile.*;
 import main.entities.*;
+
+import java.awt.event.KeyEvent;
 import java.time.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Date;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -35,6 +38,7 @@ public class GamePanel extends JPanel implements Runnable {
     Sound se = new Sound();
     public CheckCollision cChecker = new CheckCollision(this);
     KeyHandler keyH = new KeyHandler();
+    MouseHandler mouseH = new MouseHandler(this);
     public Ui ui = new Ui(this);
     SaveLoad saveLoad = new SaveLoad(this);
     Thread gameThread;
@@ -47,15 +51,34 @@ public class GamePanel extends JPanel implements Runnable {
     public int dayOfYear = date.getDayOfYear();
 
     // GACHA SYSTEM //
-    public int maxFiveTempoChars = 1;
+    // Tempo
+    public int maxFiveTempoChars = 0;
+    public int maxFiveTempoWeapons = 0;
     public int maxFourTempoChars = 0;
+    // Standard
+    public int maxFiveStandardChars = 1;
+    public int maxFiveStandardWeapons = 0;
+    public int maxFourStandardChars = 0;
+    public int getMaxFourStandardWeapons = 0;
 
     // ENTITIES && OBJECTS //
     public Player player = new Player(this, keyH);
 
+    // PROFILES //
+    public int nbProfiles = 16;
+    public int profilePage;
+    public String[] profilesNames = new String[nbProfiles];
+    public int chosenProfile;
+    // update
+    boolean buttonForNextProfilePagePressed = false;
+    boolean buttonForPreviousProfilePagePressed = false;
+
     // PLAYER //
     public int playerLevel = 1;
-    public int worldLevel, worldExp;
+    public int worldLevel, worldExp, worldEvolutionLevel;
+    public int worldLevelMaxExp;
+    public double levelExpPercentage;
+    public int[] birthdayDate = new int[2];
 
     // COMBAT //
     public int maxEffects = 4;
@@ -84,6 +107,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
 
         this.addKeyListener(keyH);
+        this.addMouseListener(mouseH);
 
         this.setFocusable(true);
 
@@ -97,9 +121,18 @@ public class GamePanel extends JPanel implements Runnable {
 
         gameThread = new Thread(this);
         gameThread.start();
-
+/*
         saveLoad.saveProfileData(); // save profile data
         saveLoad.saveObtainedCharactersData(); // save obtained characters data
+ */
+        ui.inGame = false; ui.inCalls = false; ui.inMenu = false; ui.inEntranceMenu = true;
+
+        this.levelExpPercentage = .7;
+        this.birthdayDate[0] = 0; this.birthdayDate[1] = 0; // à enlever
+
+        for (int i = 0; i < 12; i ++) {
+            this.profilesNames[i] = "-EMPTY-";
+        }
 
     }
 
@@ -141,6 +174,71 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
+
+        mouseH.update();
+
+        if (mouseH.isButtonDown(1)) { // left button
+            System.out.println("LEFT DOWN");
+
+            if (ui.inEntranceMenu) {
+                if (mouseH.getMouseX() >= 1680 && mouseH.getMouseX() < 1840
+                        && mouseH.getMouseY() >= 880 && mouseH.getMouseY() < 1040
+                        && !this.buttonForNextProfilePagePressed
+                        && this.profilePage < 3
+                ) {
+                    this.buttonForNextProfilePagePressed = true;
+                } else if (mouseH.getMouseX() >= 60 && mouseH.getMouseX() < 220
+                        && mouseH.getMouseY() >= 880 && mouseH.getMouseY() < 1040
+                        && !this.buttonForNextProfilePagePressed
+                        && this.profilePage > 0) {
+                    this.buttonForPreviousProfilePagePressed = true;
+                }
+
+                if (mouseH.getMouseX() >= 80 && mouseH.getMouseX() < 440
+                        && mouseH.getMouseY() >= 80 && mouseH.getMouseY() < 800
+                ) {
+                    this.chosenProfile = (4 *  this.profilePage);
+                } else if (mouseH.getMouseX() >= 540 && mouseH.getMouseX() < 900
+                        && mouseH.getMouseY() >= 80 && mouseH.getMouseY() < 800
+                ) {
+                    this.chosenProfile = 1 + (4 * this.profilePage);
+                } else if (mouseH.getMouseX() >= 1000 && mouseH.getMouseX() < 1360
+                        && mouseH.getMouseY() >= 80 && mouseH.getMouseY() < 800
+                ) {
+                    this.chosenProfile = 2 + (4 * this.profilePage);
+                } else if (mouseH.getMouseX() >= 1460 && mouseH.getMouseX() < 1820
+                        && mouseH.getMouseY() >= 80 && mouseH.getMouseY() < 800
+                ) {
+                    this.chosenProfile = 3 + (4 * this.profilePage);
+                }
+            }
+        } else if (mouseH.isButtonDown(2)) { // middle button
+            System.out.println("MIDDLE DOWN");
+        } else if (mouseH.isButtonDown(3)) { // right button
+            System.out.println("RIGHT DOWN");
+        }
+
+        if (mouseH.isButtonUp(1)) {
+            System.out.println("LEFT UP");
+
+            if (ui.inEntranceMenu) {
+                if (this.buttonForNextProfilePagePressed
+                        && this.profilePage < 3
+                ) {
+                    this.profilePage++;
+                    this.buttonForNextProfilePagePressed = false;
+                } else if (this.buttonForPreviousProfilePagePressed
+                        && this.profilePage > 0
+                ) {
+                    this.profilePage--;
+                    this.buttonForPreviousProfilePagePressed = false;
+                }
+            }
+        } else if (mouseH.isButtonUp(2)) { // middle button
+            System.out.println("MIDDLE UP");
+        } else if (mouseH.isButtonUp(3)) { // right button
+            System.out.println("RIGHT UP");
+        }
 
     }
 
@@ -187,6 +285,19 @@ public class GamePanel extends JPanel implements Runnable {
         se.setFile(i);
         se.play();
 
+    }
+
+    // PLAYER //
+
+    /**
+     * Formula for max world exp : ( ( e ** {@code this.worldLevel} ) / ( 2.47 ** {@code this.worldLevel} ) * 100 )
+     */
+    public void updateWorldLevelMaxExp() {
+        this.worldLevelMaxExp = (int) ( ( ( Math.exp(this.worldLevel) )/( Math.pow(2.47, this.worldLevel) ) ) * 100);
+    }
+
+    public void updateLevelExpPercentage() {
+        this.levelExpPercentage = (double) (this.worldExp * this.worldLevelMaxExp) / 100;
     }
 
     // TIME //

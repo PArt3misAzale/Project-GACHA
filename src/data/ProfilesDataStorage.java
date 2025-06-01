@@ -1,11 +1,7 @@
 package data;
 
-import java.io.Serializable;
+public class ProfilesDataStorage {
 
-public class ProfilesDataStorage implements Serializable {
-
-    int playerLevel;
-    int worldLevel;
-    int worldExp;
+    String[] profilesNames = new String[16];
 
 }
